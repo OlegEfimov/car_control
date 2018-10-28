@@ -282,7 +282,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
     private void connectWebSocket() {
         URI uri;
         try {
-            uri = new URI("ws://192.168.1.37:81/");
+            uri = new URI("ws://192.168.0.37:81/");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
