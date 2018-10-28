@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">car_control2</string>
 
+    <string name="ip_ws_title">car ip address</string>
+    <string name="ip_ws_address">192.168.0.37</string>
+
     <string name="app_name_version">Car Control 1.0</string>
     <string name="menu_settings">Settings</string>
 
