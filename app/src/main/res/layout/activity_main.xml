@@ -78,15 +78,18 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/ip_ws_edit"
-            android:layout_width="169dp"
+            android:id="@+id/edit_ip_websocket"
+            android:layout_width="243dp"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/button_buttons"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="-147dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="141dp"
+            android:hint="@string/ip_ws_address"
             android:digits="0123456789."
-            android:ems="10"
-            android:hint="192.168.0.37" />
+            android:text="@string/ip_ws_address"
+            android:inputType="numberDecimal"
+            android:padding="10dp" />
+
 
     </RelativeLayout>
 

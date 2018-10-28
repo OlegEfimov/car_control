@@ -13,6 +13,12 @@
 			 android:title="MAC address"
 			 android:summary="MAC-address of Bluetooth module"
 			 android:defaultValue="@+string/default_MAC" />
+
+		<EditTextPreference
+			android:key="pref_ip_websocket_address"
+			android:title="MAC address"
+			android:summary="MAC-address of Bluetooth module"
+			android:defaultValue="@+string/default_MAC" />
 		
 		<EditTextPreference
 			 android:key="pref_commandLeft"

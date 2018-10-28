@@ -6,17 +6,25 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.content.pm.ActivityInfo;
+import android.content.SharedPreferences;
 
 public class MainActivity extends Activity implements OnClickListener {
 
     Button btnActAccelerometer, btnActWheel, btnActButtons, btnActMCU, btnActTouch, btnActAbout;
+    private String ip_websocket;
+    private static EditText edit_ip_websocket;
+
+    private EditText etText;
+    SharedPreferences sPref;
 
     /** Called when the activity is first created. */
     @Override
@@ -24,6 +32,9 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        edit_ip_websocket = (EditText) findViewById(R.id.edit_ip_websocket);
+        loadPref();
 
         TextView textv = (TextView) findViewById(R.id.textView1);
         textv.setShadowLayer(1, 3, 3, Color.GRAY);
@@ -93,4 +104,40 @@ public class MainActivity extends Activity implements OnClickListener {
 
         return true;
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        savePrefs();
+    }
+
+
+    private void loadPref(){
+        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        ip_websocket = mySharedPreferences.getString("pref_ip_websocket_address", ip_websocket);
+    }
+
+    private void savePref(){
+        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        mySharedPreferences.setString("pref_ip_websocket_address", ip_websocket);
+    }
+
+
+
+    private void saveText() {
+        sPref = getPreferences(MODE_PRIVATE);
+        Editor ed = sPref.edit();
+        ed.putString(SAVED_TEXT, etText.getText().toString());
+        ed.commit();
+        Toast.makeText(this, "Text saved", Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadText() {
+        sPref = getPreferences(MODE_PRIVATE);
+        String savedText = sPref.getString(SAVED_TEXT, "");
+        etText.setText(savedText);
+        Toast.makeText(this, "Text loaded", Toast.LENGTH_SHORT).show();
+    }
+
 }
