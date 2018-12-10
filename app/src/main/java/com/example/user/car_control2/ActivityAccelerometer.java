@@ -317,7 +317,11 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
                 Log.i("Websocket", "Error " + e.getMessage());
             }
         };
-        mWebSocketClient.connect();
+        if (mWebSocketClient != null) {
+            Log.i("Websocket", "connect start");
+            mWebSocketClient.connect();
+            Log.i("Websocket", "connect end");
+        }
     }
 
     public void sendMessageLF(View view) {
@@ -354,7 +358,21 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
     }
 
     public void sendCommand(String cmd) {
-        mWebSocketClient.send(cmd);
-    }
+        Log.i("Websocket", "sendCommand start1");
 
+        if (mWebSocketClient != null) {
+            if (mWebSocketClient.isOpen()) {
+                Log.i("Websocket", "sendCommand start2");
+                mWebSocketClient.send(cmd);
+                Log.i("Websocket", "sendCommand end2");
+//            } else {
+//                Log.i("Websocket sendCommand", "reconnect start");
+//                mWebSocketClient.reconnect();
+//                Log.i("Websocket sendCommand", "reconnect end");
+            }
+        } else {
+            Log.i("Websocket sendCommand", "mWebSocketClient == null");
+        }
+        Log.i("Websocket", "sendCommand end1");
+    }
 }

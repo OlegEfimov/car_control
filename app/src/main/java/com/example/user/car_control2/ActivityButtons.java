@@ -255,7 +255,9 @@ public class ActivityButtons extends Activity {
                 Log.i("Websocket", "Error " + e.getMessage());
             }
         };
-        mWebSocketClient.connect();
+        if (mWebSocketClient != null) {
+			mWebSocketClient.connect();
+		}
     }
 
     public void sendMessageLF(View view) {
