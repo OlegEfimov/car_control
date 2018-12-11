@@ -58,6 +58,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
     private String commandLeft;		// command symbol for left motor from settings
     private String commandRight;	// command symbol for right motor from settings
     private String commandHorn;		// command symbol for optional command from settings (for example - horn)
+    private boolean enableControl;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,15 +87,17 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         
         LightButton = (ToggleButton) findViewById(R.id.LightButton);   
 	
-//        LightButton.setOnClickListener(new OnClickListener() {
-//    		public void onClick(View v) {
-//    			if(LightButton.isChecked()){
+        LightButton.setOnClickListener(new OnClickListener() {
+    		public void onClick(View v) {
+    			if(LightButton.isChecked()){
+                    enableControl = true;
 //    				if(BT_is_connect) bl.sendData(String.valueOf(commandHorn+"1\r"));
-//    			}else{
+    			}else{
+                    enableControl = false;
 //    				if(BT_is_connect) bl.sendData(String.valueOf(commandHorn+"0\r"));
-//    			}
-//    		}
-//    	});
+    			}
+    		}
+    	});
         
         mHandler.postDelayed(sRunnable, 600000);
         //finish();
@@ -234,10 +237,15 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         }
 
         String actionL,actionR;
-        actionL = String.valueOf(directionL+motorLeft+"\r");
-        actionR = String.valueOf(directionR+motorRight+"\r");
+        if (enableControl) {
+            actionL = String.valueOf(directionL+motorLeft+"\r");
+            actionR = String.valueOf(directionR+motorRight+"\r");
+        } else {
+            actionL = String.valueOf(directionL + "0\r");
+            actionR = String.valueOf(directionR + "0\r");
+        }
         sendCommand(String.valueOf(actionL.toUpperCase(Locale.getDefault()) + "=" + actionR.toUpperCase(Locale.getDefault()) + "=;\n"));
-        
+
     }
    
     private void loadPref(){
@@ -302,7 +310,8 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
                     @Override
                     public void run() {
                         TextView textView = (TextView)findViewById(R.id.messages);
-                        textView.setText(textView.getText() + "\n" + message);
+//                        textView.setText(textView.getText() + "\n" + message);
+                        textView.setText(message);
                     }
                 });
             }
