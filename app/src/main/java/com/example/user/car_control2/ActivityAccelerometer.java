@@ -59,6 +59,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
     private String commandRight;	// command symbol for right motor from settings
     private String commandHorn;		// command symbol for optional command from settings (for example - horn)
     private boolean enableControl;
+    private String ip_address_ws;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,10 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         commandLeft = (String) getResources().getText(R.string.default_commandLeft);
         commandRight = (String) getResources().getText(R.string.default_commandRight);
         commandHorn = (String) getResources().getText(R.string.default_commandHorn);
+
+        Intent intent = getIntent();
+         
+        ip_address_ws = intent.getStringExtra("ip_ws");
 
         loadPref();
         

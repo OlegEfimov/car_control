@@ -12,18 +12,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
+import android.widget.EditText;
 import android.content.pm.ActivityInfo;
 
 public class MainActivity extends Activity implements OnClickListener {
 
     Button btnActAccelerometer, btnActWheel, btnActButtons, btnActMCU, btnActTouch, btnActAbout;
-
+    private String ipAddress;         // ip-address from settings
+    private EditText edit_ipAddress;
+    private SharedPreferences sPref;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        ipAddress = (String) getResources().getText(R.string.ip_ws_address);
+        edit_ipAddress = (EditText) findViewById(R.id.ip_ws_edit);
+        loadPref();
 
         TextView textv = (TextView) findViewById(R.id.textView1);
         textv.setShadowLayer(1, 3, 3, Color.GRAY);
@@ -47,10 +56,30 @@ public class MainActivity extends Activity implements OnClickListener {
         btnActAbout.setOnClickListener(this);
     }
 
+    private void loadPref(){
+        sPref = getPreferences(MODE_PRIVATE); 
+        ipAddress = sPref.getString("pref_ipAddress", ipAddress);
+        edit_ipAddress.setText(ipAddress);
+    }
+
+    private void saveText() {
+        sPref = getPreferences(MODE_PRIVATE);
+        Editor ed = sPref.edit();
+        ed.putString("pref_ipAddress", edit_ipAddress.getText().toString());
+        ed.commit();
+    }
+
+    @Override
+        protected void onDestroy() {
+        super.onDestroy();
+        saveText();
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_accel:
                 Intent intent_accel = new Intent(this, ActivityAccelerometer.class);
+                intent_accel.putExtra("ip_ws", edit_ipAddress.getText().toString());
                 startActivity(intent_accel);
                 break;
             case R.id.button_wheel:
