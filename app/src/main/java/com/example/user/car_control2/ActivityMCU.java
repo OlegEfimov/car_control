@@ -4,7 +4,7 @@ import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
+// import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 public class ActivityMCU  extends Activity{
 	
-	private cBluetooth bl = null;
+	// private cBluetooth bl = null;
 	private Button btn_flash_Read, btn_flash_Write;
 	private static CheckBox cb_AutoOFF;
 	private static EditText edit_AutoOFF;
@@ -48,8 +48,8 @@ public class ActivityMCU  extends Activity{
     	error_get_data = (String) getResources().getText(R.string.error_get_data);
 		loadPref();
 		
-	    bl = new cBluetooth(this, mHandler);
-	    bl.checkBTState();
+	    // bl = new cBluetooth(this, mHandler);
+//	    bl.checkBTState();
 	    
 	    cb_AutoOFF.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -60,7 +60,7 @@ public class ActivityMCU  extends Activity{
         
         btn_flash_Read.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-	    		bl.sendData(String.valueOf("Fr\t"));
+	    		// bl.sendData(String.valueOf("Fr\t"));
 	    	}
 	    });
         
@@ -90,7 +90,7 @@ public class ActivityMCU  extends Activity{
 				    str_to_send += "\t";
 				    		
 				    Log.d(cBluetooth.TAG, "Send Flash Op:" + str_to_send);
-				    bl.sendData(str_to_send);
+				    // bl.sendData(str_to_send);
 					//Toast.makeText(getBaseContext(), str_to_send, Toast.LENGTH_SHORT).show();
 				}
 				else{
@@ -115,59 +115,59 @@ public class ActivityMCU  extends Activity{
         public void handleMessage(Message msg) {
         	ActivityMCU activity = mActivity.get();
         	if (activity != null) {
-        	switch (msg.what) {
-	            case cBluetooth.BL_NOT_AVAILABLE:
-	               	Log.d(cBluetooth.TAG, "Bluetooth is not available. Exit");
-	            	Toast.makeText(activity.getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
-	            	activity.finish();
-	                break;
-	            case cBluetooth.BL_INCORRECT_ADDRESS:
-	            	Log.d(cBluetooth.TAG, "Incorrect MAC address");
-	            	Toast.makeText(activity.getBaseContext(), "Incorrect Bluetooth address", Toast.LENGTH_SHORT).show();
-	                break;
-	            case cBluetooth.BL_REQUEST_ENABLE:   
-	            	Log.d(cBluetooth.TAG, "Request Bluetooth Enable");
-	            	BluetoothAdapter.getDefaultAdapter();
-	            	Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-	            	activity.startActivityForResult(enableBtIntent, 1);
-	                break;
-	            case cBluetooth.BL_SOCKET_FAILED:
-	            	Toast.makeText(activity.getBaseContext(), "Socket failed", Toast.LENGTH_SHORT).show();
-	            	activity.finish();
-	                break;
-	            case cBluetooth.RECIEVE_MESSAGE:								// if message is recieved 
-	            	byte[] readBuf = (byte[]) msg.obj;
-	            	String strIncom = new String(readBuf, 0, msg.arg1);
-	            	sb.append(strIncom);										// append string
+        	// switch (msg.what) {
+	        //     case cBluetooth.BL_NOT_AVAILABLE:
+	        //        	Log.d(cBluetooth.TAG, "Bluetooth is not available. Exit");
+	        //     	Toast.makeText(activity.getBaseContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+	        //     	activity.finish();
+	        //         break;
+	        //     case cBluetooth.BL_INCORRECT_ADDRESS:
+	        //     	Log.d(cBluetooth.TAG, "Incorrect MAC address");
+	        //     	Toast.makeText(activity.getBaseContext(), "Incorrect Bluetooth address", Toast.LENGTH_SHORT).show();
+	        //         break;
+	        //     case cBluetooth.BL_REQUEST_ENABLE:   
+	        //     	Log.d(cBluetooth.TAG, "Request Bluetooth Enable");
+	        //     	BluetoothAdapter.getDefaultAdapter();
+	        //     	Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+	        //     	// activity.startActivityForResult(enableBtIntent, 1);
+	        //         break;
+	        //     case cBluetooth.BL_SOCKET_FAILED:
+	        //     	Toast.makeText(activity.getBaseContext(), "Socket failed", Toast.LENGTH_SHORT).show();
+	        //     	activity.finish();
+	        //         break;
+	        //     case cBluetooth.RECIEVE_MESSAGE:								// if message is recieved 
+	        //     	byte[] readBuf = (byte[]) msg.obj;
+	        //     	String strIncom = new String(readBuf, 0, msg.arg1);
+	        //     	sb.append(strIncom);										// append string
 	            	
-	            	int FDataLineIndex = sb.indexOf("FData:");					// string with Flash-data 
-	            	int FWOKLineIndex = sb.indexOf("FWOK");						// string with the message of the successful record in Flash 
-	            	int endOfLineIndex = sb.indexOf("\r\n");
+	        //     	int FDataLineIndex = sb.indexOf("FData:");					// string with Flash-data 
+	        //     	int FWOKLineIndex = sb.indexOf("FWOK");						// string with the message of the successful record in Flash 
+	        //     	int endOfLineIndex = sb.indexOf("\r\n");
 	
-	            	Log.d(cBluetooth.TAG, "Recieve Flash Op:" + sb.toString());
+	        //     	Log.d(cBluetooth.TAG, "Recieve Flash Op:" + sb.toString());
 	            	
-	            	if (FDataLineIndex >= 0 && endOfLineIndex > 0 && endOfLineIndex > FDataLineIndex) {
-	            		String sbprint = sb.substring("FData:".length(), endOfLineIndex);
-	            		//sbprint = sbprint.replace("\r","").replace("\n","");
+	        //     	if (FDataLineIndex >= 0 && endOfLineIndex > 0 && endOfLineIndex > FDataLineIndex) {
+	        //     		String sbprint = sb.substring("FData:".length(), endOfLineIndex);
+	        //     		//sbprint = sbprint.replace("\r","").replace("\n","");
 	
-	            		if(sbprint.substring(0, 1).equals("1")) cb_AutoOFF.setChecked(true);
-	            		else cb_AutoOFF.setChecked(false);
+	        //     		if(sbprint.substring(0, 1).equals("1")) cb_AutoOFF.setChecked(true);
+	        //     		else cb_AutoOFF.setChecked(false);
 	            		
-	            		Float edit_data_AutoOFF = Float.parseFloat(sbprint.substring(1, 4))/10;  		
-	            		edit_AutoOFF.setText(String.valueOf(edit_data_AutoOFF));
+	        //     		Float edit_data_AutoOFF = Float.parseFloat(sbprint.substring(1, 4))/10;  		
+	        //     		edit_AutoOFF.setText(String.valueOf(edit_data_AutoOFF));
 	            		
-	            		sb.delete(0, sb.length());
-	                }
-	            	else if (FWOKLineIndex >= 0 && endOfLineIndex > 0 && endOfLineIndex > FWOKLineIndex) {
-	            		Toast.makeText(activity.getBaseContext(), flash_success, Toast.LENGTH_SHORT).show();
-	            		sb.delete(0, sb.length());
-	            	}
-	            	else if(endOfLineIndex > 0) {
-	            		Toast.makeText(activity.getBaseContext(), error_get_data, Toast.LENGTH_SHORT).show();
-	            		sb.delete(0, sb.length());
-	            	}
-	            	break;    
-	            }
+	        //     		sb.delete(0, sb.length());
+	        //         }
+	        //     	else if (FWOKLineIndex >= 0 && endOfLineIndex > 0 && endOfLineIndex > FWOKLineIndex) {
+	        //     		Toast.makeText(activity.getBaseContext(), flash_success, Toast.LENGTH_SHORT).show();
+	        //     		sb.delete(0, sb.length());
+	        //     	}
+	        //     	else if(endOfLineIndex > 0) {
+	        //     		Toast.makeText(activity.getBaseContext(), error_get_data, Toast.LENGTH_SHORT).show();
+	        //     		sb.delete(0, sb.length());
+	        //     	}
+	        //     	break;    
+	        //     }
             }
     	}
     }
@@ -190,13 +190,13 @@ public class ActivityMCU  extends Activity{
     	if(cb_AutoOFF.isChecked()) edit_AutoOFF.setEnabled(true);
     	else edit_AutoOFF.setEnabled(false);
     	
-    	bl.BT_Connect(address, true);
+    	// bl.BT_Connect(address, true);
     }
 
     @Override
     protected void onPause() {
     	super.onPause();
-    	bl.BT_onPause();
+    	// bl.BT_onPause();
     }
     
     @Override
