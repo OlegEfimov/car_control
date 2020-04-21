@@ -1,15 +1,20 @@
 package com.example.user.car_control2;
 
 import java.lang.ref.WeakReference;
+import java.nio.MappedByteBuffer;
 import java.util.Locale;
 
 //import com.example.user.car_control2.cBluetooth;
+import com.example.user.car_control2.Classifier;
+
 import com.example.user.car_control2.R;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +38,25 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+// import org.tensorflow.lite.examples.classification.tflite.Classifier.Device;
+// import org.tensorflow.lite.examples.classification.tflite.Classifier.Model;
+// import org.tensorflow.lite.examples.classification.tflite.Classifier.Recognition;
+
+import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.Interpreter;
+// import org.tensorflow.lite.examples.classification.env.Logger;
+// import org.tensorflow.lite.examples.classification.tflite.Classifier.Device;
+// import org.tensorflow.lite.gpu.GpuDelegate;
+// import org.tensorflow.lite.nnapi.NnApiDelegate;
+import org.tensorflow.lite.support.model.Model;
+
+import org.tensorflow.lite.support.common.FileUtil;
+import org.tensorflow.lite.support.common.TensorOperator;
+import org.tensorflow.lite.support.common.TensorProcessor;
+import org.tensorflow.lite.support.label.TensorLabel;
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
+
 
 
 public class ActivityAccelerometer extends Activity implements SensorEventListener  {
@@ -59,6 +83,8 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
     private String commandRight;	// command symbol for right motor from settings
     private String commandHorn;		// command symbol for optional command from settings (for example - horn)
     private boolean enableControl;
+    private Classifier classifier;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,10 +103,9 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
 
         loadPref();
         
-        
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER); 
-               
+        
         connectWebSocket();
 //        bl = new cBluetooth(this, mHandler);
 //        bl.checkBTState();
@@ -101,6 +126,9 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         
         mHandler.postDelayed(sRunnable, 600000);
         //finish();
+
+        runInBackground(() -> createClassifier());
+
     }
     
     private static class MyHandler extends Handler {
@@ -314,6 +342,11 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
                         textView.setText(message);
                     }
                 });
+
+                //TBD convert message to model input
+                ByteBuffer modelInput = convertMessage(message);
+                processInput(modelInput);
+
             }
 
             @Override
@@ -384,4 +417,40 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         }
         Log.i("Websocket", "sendCommand end1");
     }
-}
+
+      private void createClassifier() {
+        if (classifier != null) {
+          classifier.close();
+          classifier = null;
+        }
+        try {
+          classifier = Classifier.create(this);
+        } catch (IOException e) {
+        }
+      }
+
+//////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void processInput(ByteBuffer input) {
+        runInBackground(
+            new Runnable() {
+            @Override
+            public void run() {
+                if (classifier != null) {
+                    final List<Classifier.Recognition> results =
+                    classifier.getAction(input);
+
+                    runOnUiThread(
+                        new Runnable() {
+                        @Override
+                        public void run() {
+                        // TBD show result from model
+                        }
+                    });
+                }
+            }
+        });
+    }
+  }
+
