@@ -6,6 +6,7 @@ import java.util.Locale;
 
 //import com.example.user.car_control2.cBluetooth;
 import com.example.user.car_control2.Classifier;
+import com.example.user.car_control2.Classifier;
 
 import com.example.user.car_control2.R;
 import org.java_websocket.client.WebSocketClient;
@@ -127,7 +128,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         mHandler.postDelayed(sRunnable, 600000);
         //finish();
 
-        runInBackground(() -> createClassifier());
+        createClassifier();
 
     }
     
@@ -344,8 +345,10 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
                 });
 
                 //TBD convert message to model input
-                ByteBuffer modelInput = convertMessage(message);
-                processInput(modelInput);
+                // ByteBuffer modelInput = convertMessage(message);
+                // processInput(modelInput);
+                // ByteBuffer modelInput = convertMessage(message);
+                processInput(message);
 
             }
 
@@ -430,27 +433,31 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
       }
 
 //////////////////////////////////////////////////////////////////////////////
+// private ByteBuffer convertMessage(String message) {
+//     String str = message;
+//     String delimiter = ",";
+//     String[] tempStr;
+//     int[] tempInt;
+//     tempStr = str.split(delimiter);
+//     for(int i =0; i < tempStr.length ; i++)
+//         tempInt[i] = Integer.parseInt(tempStr[i]);
+//     return tempInt;
+// }
 
-    @Override
-    protected void processInput(ByteBuffer input) {
-        runInBackground(
-            new Runnable() {
-            @Override
-            public void run() {
-                if (classifier != null) {
-                    final List<Classifier.Recognition> results =
-                    classifier.getAction(input);
+    // protected void processInput(ByteBuffer input) {
+    protected void processInput(String input) {
+        if (classifier != null) {
+            final TensorBuffer results =
+            classifier.getAction(input);
 
-                    runOnUiThread(
-                        new Runnable() {
-                        @Override
-                        public void run() {
-                        // TBD show result from model
-                        }
-                    });
+            runOnUiThread(
+                new Runnable() {
+                @Override
+                public void run() {
+                // TBD show result from model
                 }
-            }
-        });
+            });
+        }
     }
   }
 

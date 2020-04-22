@@ -12,14 +12,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
-
-package org.tensorflow.lite.examples.classification.tflite;
+package com.example.user.car_control2;
 
 import android.app.Activity;
 import java.io.IOException;
-import org.tensorflow.lite.examples.classification.tflite.Classifier.Device;
+// import org.tensorflow.lite.examples.classification.tflite.Classifier.Device;
 import org.tensorflow.lite.support.common.TensorOperator;
 import org.tensorflow.lite.support.common.ops.NormalizeOp;
+
+import com.example.user.car_control2.Classifier;
 
 /** This TensorFlowLite classifier works with the float MobileNet model. */
 public class ClassifierFloatMobileNet extends Classifier {
@@ -52,7 +53,7 @@ public class ClassifierFloatMobileNet extends Classifier {
     // you can download this file from
     // see build.gradle for where to obtain this file. It should be auto
     // downloaded into assets.
-    return "mobilenet_v1_1.0_224.tflite";
+    return "converted_model_tf1.tflite";
   }
 
   @Override

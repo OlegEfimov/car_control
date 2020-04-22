@@ -22,9 +22,12 @@ import android.os.SystemClock;
 import android.os.Trace;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
+import java.nio.ByteBuffer;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.PriorityQueue;
 import org.tensorflow.lite.DataType;
@@ -35,15 +38,18 @@ import org.tensorflow.lite.gpu.GpuDelegate;
 import org.tensorflow.lite.nnapi.NnApiDelegate;
 import org.tensorflow.lite.support.common.FileUtil;
 import org.tensorflow.lite.support.common.TensorOperator;
-import org.tensorflow.lite.support.common.TensorProcessor;
-import org.tensorflow.lite.support.image.ImageProcessor;
-import org.tensorflow.lite.support.image.TensorImage;
+// import org.tensorflow.lite.support.common.TensorProcessor;
+// import org.tensorflow.lite.support.image.ImageProcessor;
+// import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.image.ops.ResizeOp.ResizeMethod;
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp;
 import org.tensorflow.lite.support.image.ops.Rot90Op;
 import org.tensorflow.lite.support.label.TensorLabel;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
+
+import com.example.user.car_control2.ClassifierFloatMobileNet;
+
 
 /** A classifier specialized to label images using TensorFlow Lite. */
 public abstract class Classifier {
@@ -68,10 +74,10 @@ public abstract class Classifier {
   private MappedByteBuffer tfliteModel;
 
   /** Image size along the x axis. */
-  private final int imageSizeX;
+  // private final int imageSizeX;
 
   /** Image size along the y axis. */
-  private final int imageSizeY;
+  // private final int imageSizeY;
 
   /** Optional GPU delegate for accleration. */
   private GpuDelegate gpuDelegate = null;
@@ -89,13 +95,13 @@ public abstract class Classifier {
   private List<String> labels;
 
   /** Input image TensorBuffer. */
-  private TensorImage inputImageBuffer;
+  private TensorBuffer inputBuffer;
 
   /** Output probability TensorBuffer. */
-  private final TensorBuffer outputProbabilityBuffer;
+  private final TensorBuffer outputBuffer;
 
   /** Processer to apply post processing of the output probability. */
-  private final TensorProcessor probabilityProcessor;
+  // private final TensorProcessor probabilityProcessor;
 
   /**
    * Creates a classifier with the provided configuration.
@@ -184,21 +190,34 @@ public abstract class Classifier {
     tflite = new Interpreter(tfliteModel);
 
     // Reads type and shape of input and output tensors, respectively.
-    int imageTensorIndex = 0;
-    int[] imageShape = tflite.getInputTensor(imageTensorIndex).shape(); // {1, height, width, 3}
-    DataType imageDataType = tflite.getInputTensor(imageTensorIndex).dataType();
-    int probabilityTensorIndex = 0;
-    int[] probabilityShape =
-        tflite.getOutputTensor(probabilityTensorIndex).shape(); // {1, NUM_CLASSES}
-    DataType probabilityDataType = tflite.getOutputTensor(probabilityTensorIndex).dataType();
+    int inputTensorIndex = 0;
+    int[] inputShape = tflite.getInputTensor(inputTensorIndex).shape(); // {1, height, width, 3}
+    DataType inputDataType = tflite.getInputTensor(inputTensorIndex).dataType();
+    int outputTensorIndex = 0;
+    int[] outputShape =
+        tflite.getOutputTensor(outputTensorIndex).shape(); // {1, NUM_CLASSES}
+    DataType outputDataType = tflite.getOutputTensor(outputTensorIndex).dataType();
 
-    inputImageBuffer = new TensorImage(imageDataType);
+    inputBuffer = TensorBuffer.createFixedSize(inputShape, inputDataType);
+    outputBuffer = TensorBuffer.createFixedSize(outputShape, outputDataType);
+  }
 
-    outputBuffer = TensorBuffer.createFixedSize(probabilityShape, probabilityDataType);
+  private TensorBuffer convertMessage(String message) {
+      // String str = message;
+      // String delimiter = ",";
+      // String[] tempStr;
+      // int[] tempInt;
+      // tempStr = str.split(delimiter);
+      // for(int i =0; i < tempStr.length ; i++)
+      //     tempInt[i] = Integer.parseInt(tempStr[i]);
+      // return tempInt;
+      return inputBuffer;
   }
 
   /** Runs inference and returns the classification results. */
-  public List<Recognition> getAction(ByteBuffer input) {
+  // public TensorBuffer getAction(ByteBuffer input) {
+  public TensorBuffer getAction(String message) {
+    TensorBuffer input = convertMessage(message);
     tflite.run(input, outputBuffer.getBuffer().rewind());
     return outputBuffer;
   }
@@ -221,33 +240,33 @@ public abstract class Classifier {
   }
 
   /** Get the image size along the x axis. */
-  public int getImageSizeX() {
-    return imageSizeX;
-  }
+  // public int getImageSizeX() {
+  //   return imageSizeX;
+  // }
 
   /** Get the image size along the y axis. */
-  public int getImageSizeY() {
-    return imageSizeY;
-  }
+  // public int getImageSizeY() {
+  //   return imageSizeY;
+  // }
 
   /** Loads input image, and applies preprocessing. */
-  private TensorImage loadImage(final Bitmap bitmap, int sensorOrientation) {
-    // Loads bitmap into a TensorImage.
-    inputImageBuffer.load(bitmap);
+  // private TensorImage loadImage(final Bitmap bitmap, int sensorOrientation) {
+  //   // Loads bitmap into a TensorImage.
+  //   inputBuffer.load(bitmap);
 
-    // Creates processor for the TensorImage.
-    int cropSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
-    int numRoration = sensorOrientation / 90;
-    // TODO(b/143564309): Fuse ops inside ImageProcessor.
-    ImageProcessor imageProcessor =
-        new ImageProcessor.Builder()
-            .add(new ResizeWithCropOrPadOp(cropSize, cropSize))
-            .add(new ResizeOp(imageSizeX, imageSizeY, ResizeMethod.NEAREST_NEIGHBOR))
-            .add(new Rot90Op(numRoration))
-            .add(getPreprocessNormalizeOp())
-            .build();
-    return imageProcessor.process(inputImageBuffer);
-  }
+  //   // Creates processor for the TensorImage.
+  //   int cropSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
+  //   int numRoration = sensorOrientation / 90;
+  //   // TODO(b/143564309): Fuse ops inside ImageProcessor.
+  //   ImageProcessor imageProcessor =
+  //       new ImageProcessor.Builder()
+  //           .add(new ResizeWithCropOrPadOp(cropSize, cropSize))
+  //           .add(new ResizeOp(imageSizeX, imageSizeY, ResizeMethod.NEAREST_NEIGHBOR))
+  //           .add(new Rot90Op(numRoration))
+  //           .add(getPreprocessNormalizeOp())
+  //           .build();
+  //   return imageProcessor.process(inputBuffer);
+  // }
 
   /** Gets the top-k results. */
   private static List<Recognition> getTopKProbability(Map<String, Float> labelProb) {

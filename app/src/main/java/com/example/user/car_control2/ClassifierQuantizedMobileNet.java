@@ -12,12 +12,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
-
-package org.tensorflow.lite.examples.classification.tflite;
+package com.example.user.car_control2;
 
 import android.app.Activity;
 import java.io.IOException;
-import org.tensorflow.lite.examples.classification.tflite.Classifier.Device;
+// import org.tensorflow.lite.examples.classification.tflite.Classifier.Device;
 import org.tensorflow.lite.support.common.TensorOperator;
 import org.tensorflow.lite.support.common.ops.NormalizeOp;
 
@@ -44,7 +43,7 @@ public class ClassifierQuantizedMobileNet extends Classifier {
    */
   public ClassifierQuantizedMobileNet(Activity activity, Device device, int numThreads)
       throws IOException {
-    super(activity, device, numThreads);
+    super(activity);
   }
 
   @Override
