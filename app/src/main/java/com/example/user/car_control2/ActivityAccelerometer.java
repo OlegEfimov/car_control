@@ -339,7 +339,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
                     @Override
                     public void run() {
                         TextView textView = (TextView)findViewById(R.id.messages);
-//                        textView.setText(textView.getText() + "\n" + message);
+                        textView.setText(textView.getText() + "\n" + message);
                         textView.setText(message);
                     }
                 });
