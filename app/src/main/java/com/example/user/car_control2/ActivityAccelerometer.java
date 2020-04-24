@@ -370,14 +370,10 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
     }
 
     public void sendMessageLF(View view) {
-//        EditText editText = (EditText)findViewById(R.id.message);
-//        mWebSocketClient.send(editText.getText().toString());
         String str1 = "200=0=;";
         int action1 = 200;
         int action2 = 0;
         mWebSocketClient.send(String.format("%s\n", str1));
-//        mWebSocketClient.send(String.format("%d=%d=\n", action1, action2));
-//        editText.setText("");
     }
 
     public void sendMessageRF(View view) {
@@ -385,21 +381,18 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         int action1 = 0;
         int action2 = 200;
         mWebSocketClient.send(String.format("%s\n", str1));
-//        mWebSocketClient.send(String.format("%d=%d=\n", action1, action2));
     }
     public void sendMessageLB(View view) {
         String str1 = "-200=0=;";
         int action1 = -200;
         int action2 = 0;
         mWebSocketClient.send(String.format("%s\n", str1));
-//        mWebSocketClient.send(String.format("%d=%d=\n", action1, action2));
     }
     public void sendMessageRB(View view) {
         String str1 = "0=-200=;";
         int action1 = 0;
         int action2 = -200;
         mWebSocketClient.send(String.format("%s\n", str1));
-//        mWebSocketClient.send(String.format("%d=%d=\n", action1, action2));
     }
 
     public void sendCommand(String cmd) {
@@ -432,19 +425,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         }
       }
 
-//////////////////////////////////////////////////////////////////////////////
-// private ByteBuffer convertMessage(String message) {
-//     String str = message;
-//     String delimiter = ",";
-//     String[] tempStr;
-//     int[] tempInt;
-//     tempStr = str.split(delimiter);
-//     for(int i =0; i < tempStr.length ; i++)
-//         tempInt[i] = Integer.parseInt(tempStr[i]);
-//     return tempInt;
-// }
 
-    // protected void processInput(ByteBuffer input) {
     protected void processInput(String input) {
         if (classifier != null) {
             final TensorBuffer results =
