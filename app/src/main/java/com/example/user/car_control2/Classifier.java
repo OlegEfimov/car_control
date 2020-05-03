@@ -54,6 +54,8 @@ import com.example.user.car_control2.ClassifierFloatMobileNet;
 /** A classifier specialized to label images using TensorFlow Lite. */
 public abstract class Classifier {
 
+  private static final int SENSORS_NUMBER = 6;  // The maximum length of an input sentence.
+  private static final String SIMPLE_SPACE_OR_PUNCTUATION = " |\\,|\\;|\\!|\\?";
   /** The model type used for classification. */
   public enum Model {
     FLOAT,
@@ -202,24 +204,46 @@ public abstract class Classifier {
     outputBuffer = TensorBuffer.createFixedSize(outputShape, outputDataType);
   }
 
-  private TensorBuffer convertMessage(String message) {
-      // String str = message;
-      // String delimiter = ",";
-      // String[] tempStr;
-      // int[] tempInt;
-      // tempStr = str.split(delimiter);
-      // for(int i =0; i < tempStr.length ; i++)
-      //     tempInt[i] = Integer.parseInt(tempStr[i]);
-      // return tempInt;
-      return inputBuffer;
+  float[][] convertMessage(String message) {
+    float[] tmp = new float[SENSORS_NUMBER];
+    List<String> array = Arrays.asList(message.split(SIMPLE_SPACE_OR_PUNCTUATION));
+
+    int index = 0;
+    for (String word : array) {
+      if (index >= SENSORS_NUMBER) {
+        break;
+      }
+      tmp[index++] = Float.parseFloat(word);
+    }
+    // wrapping.
+    float[][] ans = {tmp};
+    return ans;
   }
 
+  // private float[] convertMessage(String message) {
+    // float[][] input = tokenizeInputText(message);
+    // String str = message;
+      // String delimiter = ",";
+      // String[] tempStr;
+      // List<String> tempStr = new ArrayList<>();
+      // tempStr = str.split(delimiter);
+      // float[][] tempValue = new float[1][tempStr.length];
+      // for(int i =0; i < tempStr.length ; i++)
+          // tempValue[i] = Float.parseFloat(tempStr[i]);
+      // return input;
+  // }
+
   /** Runs inference and returns the classification results. */
-  // public TensorBuffer getAction(ByteBuffer input) {
   public TensorBuffer getAction(String message) {
-    TensorBuffer input = convertMessage(message);
-    tflite.run(input, outputBuffer.getBuffer().rewind());
+  // public float[] getAction(String message) {
+    // TensorBuffer input = convertMessage(message);
+    // float[] input = convertMessage(message);
+    float[][] input = convertMessage(message);
+    // float[][] output = new float[1][1];
+    // tflite.run(input, outputBuffer.getBuffer());
+    tflite.run(input, outputBuffer.getBuffer());
     return outputBuffer;
+    // return outputBuffer;
   }
 
   /** Closes the interpreter and model to release resources. */

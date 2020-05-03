@@ -273,7 +273,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
             actionL = String.valueOf(directionL + "0\r");
             actionR = String.valueOf(directionR + "0\r");
         }
-        sendCommand(String.valueOf(actionL.toUpperCase(Locale.getDefault()) + "=" + actionR.toUpperCase(Locale.getDefault()) + "=;\n"));
+        // sendCommand(String.valueOf(actionL.toUpperCase(Locale.getDefault()) + "=" + actionR.toUpperCase(Locale.getDefault()) + "=;\n"));
 
     }
    
@@ -429,6 +429,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
     protected void processInput(String input) {
         if (classifier != null) {
             final TensorBuffer results =
+            // final float[] results =
             classifier.getAction(input);
 
             runOnUiThread(

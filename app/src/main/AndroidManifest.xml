@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,12 +24,12 @@
         <activity
             android:name=".ActivityAccelerometer"
             android:label="@string/title_activity_accelerometer"
-            android:screenOrientation="fullSensor" >
+            android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name=".ActivityWheel"
             android:label="@string/title_activity_wheel"
-            android:screenOrientation="fullSensor" >
+            android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name=".SetPreferenceActivity"

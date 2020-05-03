@@ -4,7 +4,7 @@
     <string name="ip_ws_title">car ip address</string>
     <string name="ip_ws_address">192.168.4.1</string>
 
-    <string name="app_name_version">Car Control 1.2</string>
+    <string name="app_name_version">Car Control 2.01</string>
     <string name="menu_settings">Settings</string>
 
     <string name="title_activity_main">Cxem CAR</string>
