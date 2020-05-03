@@ -234,16 +234,16 @@ public abstract class Classifier {
   // }
 
   /** Runs inference and returns the classification results. */
-  public TensorBuffer getAction(String message) {
+  public float[][] getAction(String message) {
   // public float[] getAction(String message) {
     // TensorBuffer input = convertMessage(message);
     // float[] input = convertMessage(message);
     float[][] input = convertMessage(message);
-    // float[][] output = new float[1][1];
+    float[][] output = new float[1][1];
+    tflite.run(input, output);
     // tflite.run(input, outputBuffer.getBuffer());
-    tflite.run(input, outputBuffer.getBuffer());
-    return outputBuffer;
     // return outputBuffer;
+    return output;
   }
 
   /** Closes the interpreter and model to release resources. */

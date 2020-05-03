@@ -425,12 +425,60 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         }
       }
 
+  private static final int ZERO_ENGINE = 10;
+  private static final int ZERO_ENGINE_SHIFT = 70;
+  private static final int MAX_ENGINE_FORCE = 800;
+  private static final int MAX_ENGINE_FORCE_HW = 230 - ZERO_ENGINE_SHIFT;
+  private int maxEngineForceHW = MAX_ENGINE_FORCE_HW;
 
     protected void processInput(String input) {
+
+        // if (classifier != null && enableControl) {
         if (classifier != null) {
-            final TensorBuffer results =
-            // final float[] results =
+            final float[][] results =
             classifier.getAction(input);
+
+            float tmpActFloat = results[0][0];
+
+            float tmpAction_0 = (tmpActFloat / 2) + 1;
+            float tmpAction_1 = (-tmpActFloat / 2) + 1;
+            int forceLeftHW = Math.round(tmpAction_0 * maxEngineForceHW);
+            int forceRightHW = Math.round(tmpAction_1 * maxEngineForceHW);
+            int left = (int) (forceLeftHW * 0.3F);
+            int right = (int) (forceRightHW * 0.3F);
+
+            if (left > ZERO_ENGINE) {
+                left = left + ZERO_ENGINE_SHIFT;
+            } else if ((left + ZERO_ENGINE) < 0) {
+                left = left - ZERO_ENGINE_SHIFT;
+            } else {
+                left = 0;
+            }
+
+            if (right > ZERO_ENGINE) {
+                right = right + ZERO_ENGINE_SHIFT;
+            } else if ((right + ZERO_ENGINE) < 0) {
+                right = right - ZERO_ENGINE_SHIFT;
+            } else {
+                right = 0;
+            }
+
+            motorLeft = left;
+            motorRight = right;
+
+
+            String directionL = "";
+            String directionR = "";
+
+            String actionL,actionR;
+            if (enableControl) {
+                actionL = String.valueOf(directionL+motorLeft+"\r");
+                actionR = String.valueOf(directionR+motorRight+"\r");
+            } else {
+                actionL = String.valueOf(directionL + "0\r");
+                actionR = String.valueOf(directionR + "0\r");
+            }
+            sendCommand(String.valueOf(actionL.toUpperCase(Locale.getDefault()) + "=" + actionR.toUpperCase(Locale.getDefault()) + "=;\n"));
 
             runOnUiThread(
                 new Runnable() {
