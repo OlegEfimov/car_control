@@ -6,7 +6,6 @@ import java.util.Locale;
 
 //import com.example.user.car_control2.cBluetooth;
 import com.example.user.car_control2.Classifier;
-import com.example.user.car_control2.Classifier;
 
 import com.example.user.car_control2.R;
 import org.java_websocket.client.WebSocketClient;
@@ -432,6 +431,8 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
   private int maxEngineForceHW = MAX_ENGINE_FORCE_HW;
 
     protected void processInput(String input) {
+        Log.i("processInput", "input= " + input);
+
 
         // if (classifier != null && enableControl) {
         if (classifier != null) {
@@ -440,12 +441,21 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
 
             float tmpActFloat = results[0][0];
 
-            float tmpAction_0 = (tmpActFloat / 2) + 1;
-            float tmpAction_1 = (-tmpActFloat / 2) + 1;
+            float tmpAction_0 = (float)(tmpActFloat * 0.5F) + 0.7F;
+            float tmpAction_1 = (float)(-tmpActFloat * 0.5F) +0.7F;
+
+            String strAction_0 =String.valueOf(tmpAction_0); 
+            String strAction_1 =String.valueOf(tmpAction_1); 
+            Log.i("processInput", "Action= " + strAction_0 + " | " + strAction_1);
+
             int forceLeftHW = Math.round(tmpAction_0 * maxEngineForceHW);
             int forceRightHW = Math.round(tmpAction_1 * maxEngineForceHW);
             int left = (int) (forceLeftHW * 0.3F);
             int right = (int) (forceRightHW * 0.3F);
+
+            String strLeft =String.valueOf(left); 
+            String strRight =String.valueOf(right); 
+            Log.i("processInput", "left= " + strLeft + " right= " + strRight);
 
             if (left > ZERO_ENGINE) {
                 left = left + ZERO_ENGINE_SHIFT;

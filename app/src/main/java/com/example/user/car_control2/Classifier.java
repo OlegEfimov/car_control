@@ -54,7 +54,7 @@ import com.example.user.car_control2.ClassifierFloatMobileNet;
 /** A classifier specialized to label images using TensorFlow Lite. */
 public abstract class Classifier {
 
-  private static final int SENSORS_NUMBER = 6;  // The maximum length of an input sentence.
+  private static final int SENSORS_NUMBER = 10;  // The maximum length of an input sentence.
   private static final String SIMPLE_SPACE_OR_PUNCTUATION = " |\\,|\\;|\\!|\\?";
   /** The model type used for classification. */
   public enum Model {
