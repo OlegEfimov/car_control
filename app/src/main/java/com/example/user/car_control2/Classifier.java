@@ -239,7 +239,7 @@ public abstract class Classifier {
     // TensorBuffer input = convertMessage(message);
     // float[] input = convertMessage(message);
     float[][] input = convertMessage(message);
-    float[][] output = new float[1][1];
+    float[][] output = new float[1][2];
     tflite.run(input, output);
     // tflite.run(input, outputBuffer.getBuffer());
     // return outputBuffer;

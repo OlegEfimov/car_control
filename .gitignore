@@ -1,4 +1,5 @@
 *.iml
+*.bak
 .gradle
 /local.properties
 /.idea/libraries
@@ -9,3 +10,4 @@
 /captures
 .externalNativeBuild
 /.idea/
+/.project
