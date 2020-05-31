@@ -16,14 +16,19 @@ limitations under the License.
 package com.example.user.car_control2;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.SystemClock;
 import android.os.Trace;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.ByteBuffer;
 
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,6 +42,7 @@ import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.GpuDelegate;
 import org.tensorflow.lite.nnapi.NnApiDelegate;
 import org.tensorflow.lite.support.common.FileUtil;
+import org.tensorflow.lite.support.common.SupportPreconditions;
 import org.tensorflow.lite.support.common.TensorOperator;
 // import org.tensorflow.lite.support.common.TensorProcessor;
 // import org.tensorflow.lite.support.image.ImageProcessor;
@@ -189,7 +195,8 @@ public abstract class Classifier {
   /** Initializes a {@code Classifier}. */
   protected Classifier(Activity activity, String modelName) throws IOException {
     String fileName = modelName + ".tflite";
-    tfliteModel = FileUtil.loadMappedFile(activity, fileName);
+    // tfliteModel = FileUtil.loadMappedFile(activity, fileName);
+    tfliteModel = loadMappedFile(activity, fileName);
     tflite = new Interpreter(tfliteModel);
 
     // Reads type and shape of input and output tensors, respectively.
@@ -334,4 +341,48 @@ public abstract class Classifier {
    * 1.0f, respectively.
    */
   protected abstract TensorOperator getPostprocessNormalizeOp();
+
+  public MappedByteBuffer loadMappedFile(Context context, String filePath) throws IOException {
+       SupportPreconditions.checkNotNull(context, "Context should not be null.");
+       SupportPreconditions.checkNotNull(filePath, "File path cannot be null.");
+      AssetFileDescriptor fileDescriptor = context.getAssets().openFd(filePath);
+
+      MappedByteBuffer var9;
+      try {
+          FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
+
+          try {
+              FileChannel fileChannel = inputStream.getChannel();
+              long startOffset = fileDescriptor.getStartOffset();
+              long declaredLength = fileDescriptor.getDeclaredLength();
+              var9 = fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
+          } catch (Throwable var12) {
+              try {
+                  inputStream.close();
+              } catch (Throwable var11) {
+                  var12.addSuppressed(var11);
+              }
+
+              throw var12;
+          }
+
+          inputStream.close();
+      } catch (Throwable var13) {
+          if (fileDescriptor != null) {
+              try {
+                  fileDescriptor.close();
+              } catch (Throwable var10) {
+                  var13.addSuppressed(var10);
+              }
+          }
+
+          throw var13;
+      }
+
+      if (fileDescriptor != null) {
+          fileDescriptor.close();
+      }
+
+      return var9;
+  }
 }
