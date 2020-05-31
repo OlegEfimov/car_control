@@ -135,6 +135,14 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
 
     }
     
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mWebSocketClient != null) {
+            mWebSocketClient.close();
+        }
+    }
+
     private static class MyHandler extends Handler {
         private final WeakReference<ActivityAccelerometer> mActivity;
      
