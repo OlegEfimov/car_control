@@ -111,7 +111,6 @@ public class MainActivity extends Activity implements OnClickListener, AdapterVi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if (parent == modelSpinner) {
-//            model = Model.valueOf(parent.getItemAtPosition(pos).toString().toUpperCase());
             int selectedPosition = modelSpinner.getSelectedItemPosition();
             selectedModelName = modelNames[selectedPosition];
         }
@@ -122,7 +121,4 @@ public class MainActivity extends Activity implements OnClickListener, AdapterVi
     // Do nothing.
     }
 
-    // public String getSelectedModelName() {
-    //     return selectedModelName;
-    // }
 }

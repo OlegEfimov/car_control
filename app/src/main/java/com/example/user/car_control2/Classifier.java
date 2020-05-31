@@ -319,9 +319,6 @@ public abstract class Classifier {
     return recognitions;
   }
 
-  /** Gets the name of the model file stored in Assets. */
-  protected abstract String getModelPath();
-
   /** Gets the name of the label file stored in Assets. */
   protected abstract String getLabelPath();
 

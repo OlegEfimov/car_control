@@ -506,9 +506,5 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         }
     }
 
-    // public String getSelectedModelName() {
-    //     return modelName;
-    // }
-
   }
 
