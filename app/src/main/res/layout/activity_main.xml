@@ -97,7 +97,7 @@
         android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true"
         android:paddingTop="15sp"
-        android:entries="@array/tfe_ic_models"
-        android:prompt="@string/tfe_ic_model" />
+        android:entries="@array/tf_models"
+        android:prompt="@string/tf_model" />
 
 </RelativeLayout>

@@ -56,8 +56,8 @@
     <string name="default_pwmBtnMotorRight">255</string>
     <string name="default_xRperc">60</string>
 
-    <string name="tfe_ic_model" translatable="false">Model:</string>
-    <string-array name="tfe_ic_models" translatable="false">
+    <string name="tf_model" translatable="false">Model:</string>
+    <string-array name="tf_models" translatable="false">
         <item>model_1</item>
         <item>model_2</item>
         <item>model_3</item>

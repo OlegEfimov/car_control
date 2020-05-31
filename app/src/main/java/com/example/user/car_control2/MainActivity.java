@@ -32,7 +32,7 @@ public class MainActivity extends Activity implements OnClickListener, AdapterVi
         // setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Resources res = getResources();
 
-        modelNames = res.getStringArray( R.array.tfe_ic_models );
+        modelNames = res.getStringArray( R.array.tf_models );
 
         TextView textv = (TextView) findViewById(R.id.textView1);
         textv.setShadowLayer(1, 3, 3, Color.GRAY);
