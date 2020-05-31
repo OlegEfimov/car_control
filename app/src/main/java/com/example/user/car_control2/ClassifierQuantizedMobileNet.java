@@ -41,9 +41,9 @@ public class ClassifierQuantizedMobileNet extends Classifier {
    *
    * @param activity
    */
-  public ClassifierQuantizedMobileNet(Activity activity, Device device, int numThreads)
+  public ClassifierQuantizedMobileNet(Activity activity, String modelName, Device device, int numThreads)
       throws IOException {
-    super(activity);
+    super(activity, modelName);
   }
 
   @Override

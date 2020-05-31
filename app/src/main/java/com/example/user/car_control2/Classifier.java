@@ -111,9 +111,9 @@ public abstract class Classifier {
    * @param activity The current Activity.
    * @return A classifier with the desired configuration.
    */
-  public static Classifier create(Activity activity)
+  public static Classifier create(Activity activity, String modelName)
       throws IOException {
-    return new ClassifierFloatMobileNet(activity);
+    return new ClassifierFloatMobileNet(activity, modelName);
   }
 
   /** An immutable result returned by a Classifier describing what was recognized. */
@@ -187,8 +187,9 @@ public abstract class Classifier {
   }
 
   /** Initializes a {@code Classifier}. */
-  protected Classifier(Activity activity) throws IOException {
-    tfliteModel = FileUtil.loadMappedFile(activity, getModelPath());
+  protected Classifier(Activity activity, String modelName) throws IOException {
+    String fileName = modelName + ".tflite";
+    tfliteModel = FileUtil.loadMappedFile(activity, fileName);
     tflite = new Interpreter(tfliteModel);
 
     // Reads type and shape of input and output tensors, respectively.

@@ -84,6 +84,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
     private String commandHorn;		// command symbol for optional command from settings (for example - horn)
     private boolean enableControl;
     private Classifier classifier;
+    public String modelName;
 
 
     @Override
@@ -100,6 +101,9 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         commandLeft = (String) getResources().getText(R.string.default_commandLeft);
         commandRight = (String) getResources().getText(R.string.default_commandRight);
         commandHorn = (String) getResources().getText(R.string.default_commandHorn);
+
+        Intent intent = getIntent();
+        modelName = intent.getStringExtra("model_name");
 
         loadPref();
         
@@ -127,7 +131,7 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         mHandler.postDelayed(sRunnable, 600000);
         //finish();
 
-        createClassifier();
+        createClassifier(modelName);
 
     }
     
@@ -413,13 +417,13 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
         Log.i("Websocket", "sendCommand end1");
     }
 
-      private void createClassifier() {
+      private void createClassifier(String modelName) {
         if (classifier != null) {
           classifier.close();
           classifier = null;
         }
         try {
-          classifier = Classifier.create(this);
+          classifier = Classifier.create(this, modelName);
         } catch (IOException e) {
         }
       }
@@ -501,5 +505,10 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
             });
         }
     }
+
+    // public String getSelectedModelName() {
+    //     return modelName;
+    // }
+
   }
 

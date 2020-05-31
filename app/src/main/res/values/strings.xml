@@ -58,13 +58,13 @@
 
     <string name="tfe_ic_model" translatable="false">Model:</string>
     <string-array name="tfe_ic_models" translatable="false">
-        <item>Model 1</item>
-        <item>Model 2</item>
-        <item>Model 3</item>
-        <item>Model 4</item>
-        <item>Model 5</item>
-        <item>Model 6</item>
-        <item>Model 7</item>
+        <item>model_1</item>
+        <item>model_2</item>
+        <item>model_3</item>
+        <item>model_4</item>
+        <item>model_5</item>
+        <item>converted_model_tf1</item>
+        <item>model_7</item>
     </string-array>
 
 </resources>

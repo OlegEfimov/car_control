@@ -37,15 +37,19 @@ public class ClassifierFloatMobileNet extends Classifier {
   private static final float PROBABILITY_MEAN = 0.0f;
 
   private static final float PROBABILITY_STD = 1.0f;
+  public String modelName;
 
   /**
    * Initializes a {@code ClassifierFloatMobileNet}.
    *
    * @param activity
    */
-  public ClassifierFloatMobileNet(Activity activity)
+  public ClassifierFloatMobileNet(Activity activity, String modelName)
       throws IOException {
-    super(activity);
+    super(activity, modelName);
+    // modelName = activity.modelName + ".tflite";
+    // modelName = activity.getSelectedModelName();
+    this.modelName = modelName;
   }
 
   @Override
@@ -53,7 +57,8 @@ public class ClassifierFloatMobileNet extends Classifier {
     // you can download this file from
     // see build.gradle for where to obtain this file. It should be auto
     // downloaded into assets.
-    return "converted_model_tf1.tflite";
+    // return "converted_model_tf1.tflite";
+    return this.modelName;
   }
 
   @Override
