@@ -90,4 +90,14 @@
 
     </RelativeLayout>
 
+    <Spinner
+        android:id="@+id/model_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="15sp"
+        android:entries="@array/tfe_ic_models"
+        android:prompt="@string/tfe_ic_model" />
+
 </RelativeLayout>
