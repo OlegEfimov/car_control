@@ -194,9 +194,9 @@ public abstract class Classifier {
 
   /** Initializes a {@code Classifier}. */
   protected Classifier(Activity activity, String modelName) throws IOException {
-    String fileName = modelName + ".tflite";
-    // tfliteModel = FileUtil.loadMappedFile(activity, fileName);
-    tfliteModel = loadMappedFile(activity, fileName);
+    String fileName = modelName;
+    tfliteModel = FileUtil.loadMappedFile(activity, fileName);
+    // tfliteModel = loadMappedFile(activity, fileName);
     tflite = new Interpreter(tfliteModel);
 
     // Reads type and shape of input and output tensors, respectively.

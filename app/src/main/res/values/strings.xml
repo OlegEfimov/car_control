@@ -57,6 +57,7 @@
     <string name="default_xRperc">60</string>
 
     <string name="tf_model" translatable="false">Model:</string>
+<!-- 
     <string-array name="tf_models" translatable="false">
         <item>model_1</item>
         <item>model_2</item>
@@ -66,5 +67,5 @@
         <item>converted_model_tf1</item>
         <item>model_7</item>
     </string-array>
-
+ -->
 </resources>

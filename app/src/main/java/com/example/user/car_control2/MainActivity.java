@@ -3,6 +3,7 @@ package com.example.user.car_control2;
 import android.app.Activity;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,17 +13,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Spinner;
 import android.content.pm.ActivityInfo;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+// import java.util.List;
 
 public class MainActivity extends Activity implements OnClickListener, AdapterView.OnItemSelectedListener {
 
     Button btnActAccelerometer, btnActWheel, btnActButtons, btnActMCU, btnActTouch, btnActAbout;
     private Spinner modelSpinner;
     private String selectedModelName;
-    private String[] modelNames;
+    private List<String> modelNames;
 
     /** Called when the activity is first created. */
     @Override
@@ -32,7 +39,23 @@ public class MainActivity extends Activity implements OnClickListener, AdapterVi
         // setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Resources res = getResources();
 
-        modelNames = res.getStringArray( R.array.tf_models );
+        // modelNames = res.getStringArray( R.array.tf_models );
+
+        AssetManager aMan = getAssets();
+        String[] allNames = new String[0];
+        try {
+            allNames = aMan.list("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        modelNames = new ArrayList<>();
+        for (String name : allNames) {
+            if (name.endsWith("tflite")) {
+                modelNames.add(name);
+            }
+        }
 
         TextView textv = (TextView) findViewById(R.id.textView1);
         textv.setShadowLayer(1, 3, 3, Color.GRAY);
@@ -58,7 +81,11 @@ public class MainActivity extends Activity implements OnClickListener, AdapterVi
         modelSpinner = findViewById(R.id.model_spinner);
         modelSpinner.setOnItemSelectedListener(this);
 
-        selectedModelName = modelNames[0];
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, modelNames);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down vieww
+        modelSpinner.setAdapter(spinnerArrayAdapter);
+
+        selectedModelName = modelNames.get(0);
     }
 
     public void onClick(View v) {
@@ -112,7 +139,7 @@ public class MainActivity extends Activity implements OnClickListener, AdapterVi
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         if (parent == modelSpinner) {
             int selectedPosition = modelSpinner.getSelectedItemPosition();
-            selectedModelName = modelNames[selectedPosition];
+            selectedModelName = modelNames.get(selectedPosition);
         }
     }
 
