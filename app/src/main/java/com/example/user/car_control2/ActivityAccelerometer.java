@@ -455,8 +455,10 @@ public class ActivityAccelerometer extends Activity implements SensorEventListen
 
             // float tmpAction_0 = (float)(tmpActFloat * 0.5F) + 0.7F;
             // float tmpAction_1 = (float)(-tmpActFloat * 0.5F) +0.7F;
-            float tmpAction_0 = (float)results[0][0] + 0.7F;
-            float tmpAction_1 = (float)results[0][1] +0.7F;
+            // float tmpAction_0 = (float)results[0][0] + 0.7F;
+            // float tmpAction_1 = (float)results[0][1] +0.7F;
+            float tmpAction_0 = (float)results[0][0];
+            float tmpAction_1 = (float)results[0][1];
 
             String strAction_0 =String.valueOf(tmpAction_0); 
             String strAction_1 =String.valueOf(tmpAction_1); 
